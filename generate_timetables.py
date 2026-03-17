@@ -688,7 +688,7 @@ def build_document(students: list[Student]) -> str:
       <div class="toolbar-actions">
         <input id="searchInput" class="search-input" type="search" placeholder="이름 또는 학번 검색">
         <button id="resetButton" class="btn secondary" type="button">전체 보기</button>
-        <button id="downloadVisibleButton" class="btn" type="button">보이는 학생 PDF</button>
+        <button id="downloadVisibleButton" class="btn" type="button">검색한 시간표 PDF</button>
         <a class="btn secondary" href="__ZIP_HREF__" download>전체 PDF ZIP</a>
       </div>
     </section>
@@ -921,10 +921,10 @@ def draw_choice_chip(
 ) -> None:
     paste_rounded_fill(image, box, fill, radius=26, outline=(217, 205, 194), width=2)
     x1, y1, x2, y2 = box
-    label_font = get_font(22)
-    value_font, spacing = fit_multiline_text(draw, subject_lines(subject), (x1 + 18, y1 + 34, x2 - 18, y2 - 12), 28, 20)
-    draw.text((x1 + 18, y1 + 16), label, font=label_font, fill=(118, 106, 98))
-    draw.multiline_text((x1 + 18, y1 + 46), subject_lines(subject), font=value_font, fill=(48, 42, 36), spacing=spacing, align="left")
+    label_font = get_font(18)
+    value_font, spacing = fit_multiline_text(draw, subject_lines(subject), (x1 + 18, y1 + 24, x2 - 18, y2 - 10), 23, 15)
+    draw.text((x1 + 18, y1 + 10), label, font=label_font, fill=(118, 106, 98))
+    draw.multiline_text((x1 + 18, y1 + 28), subject_lines(subject), font=value_font, fill=(48, 42, 36), spacing=spacing, align="left")
 
 
 def draw_slot_cell(
@@ -985,9 +985,9 @@ def build_student_pdf_image(student: Student) -> Image.Image:
     draw.text((panel[0] + 26, panel[1] + 22), "선택 과목", font=get_font(32), fill=ink)
 
     chip_gap_x = 18
-    chip_gap_y = 14
+    chip_gap_y = 8
     chip_width = ((panel[2] - panel[0]) - 52 - chip_gap_x) // 2
-    chip_height = 86
+    chip_height = 70
     chip_x1 = panel[0] + 26
     chip_x2 = chip_x1 + chip_width + chip_gap_x
     chip_start_y = panel[1] + 68
