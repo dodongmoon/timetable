@@ -10,24 +10,21 @@
       --ink: #2a2521;
       --muted: #756a61;
       --line: #d8cfc7;
-      --line-strong: #9f9185;
-      --bg: #f5efe7;
       --card-shadow: 0 24px 70px rgba(80, 58, 37, 0.12);
-      --choice-a: #f7dcc5;
-      --choice-b: #c8c7e8;
-      --choice-c: #d7d6d8;
-      --choice-d: #c8eadf;
-      --choice-e: #cfd9f3;
-      --choice-f: #e0d4ea;
-      --choice-g: #fff1b8;
-      --choice-h: #eef0c7;
+      --choice-a: rgba(247, 220, 197, 0.82);
+      --choice-b: rgba(200, 199, 232, 0.76);
+      --choice-c: rgba(215, 214, 216, 0.78);
+      --choice-d: rgba(200, 234, 223, 0.82);
+      --choice-e: rgba(207, 217, 243, 0.8);
+      --choice-f: rgba(224, 212, 234, 0.82);
+      --choice-g: rgba(255, 241, 184, 0.82);
+      --choice-h: rgba(238, 240, 199, 0.88);
       --common-art: #f7efe5;
       --common-career: #f9efe6;
       --common-sports: #ece8e4;
       --common-club: #f4eadc;
       --empty: #f4f1ed;
       --accent: #ca8b57;
-      --accent-2: #7caa94;
     }
 
     * {
@@ -112,6 +109,10 @@
     }
 
     .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
       border: 0;
       border-radius: 999px;
       padding: 12px 16px;
@@ -127,12 +128,6 @@
       color: var(--ink);
       background: white;
       border: 1px solid rgba(159, 145, 133, 0.42);
-      box-shadow: none;
-    }
-
-    .btn:disabled {
-      cursor: wait;
-      opacity: 0.7;
       box-shadow: none;
     }
 
@@ -161,7 +156,6 @@
         linear-gradient(180deg, rgba(255, 247, 236, 0.96) 0%, rgba(255, 255, 255, 0.96) 100%),
         var(--paper);
       box-shadow: var(--card-shadow);
-      break-after: page;
     }
 
     .student-page.is-hidden {
@@ -183,6 +177,23 @@
       align-items: start;
       margin-bottom: 20px;
       padding-top: 12px;
+    }
+
+    .student-heading {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .page-download {
+      min-width: 132px;
     }
 
     .eyebrow {
@@ -255,14 +266,14 @@
       word-break: keep-all;
     }
 
-    .choice-a { background: rgba(247, 220, 197, 0.82); }
-    .choice-b { background: rgba(200, 199, 232, 0.72); }
-    .choice-c { background: rgba(215, 214, 216, 0.74); }
-    .choice-d { background: rgba(200, 234, 223, 0.82); }
-    .choice-e { background: rgba(207, 217, 243, 0.78); }
-    .choice-f { background: rgba(224, 212, 234, 0.82); }
-    .choice-g { background: rgba(255, 241, 184, 0.78); }
-    .choice-h { background: rgba(238, 240, 199, 0.88); }
+    .choice-a { background: var(--choice-a); }
+    .choice-b { background: var(--choice-b); }
+    .choice-c { background: var(--choice-c); }
+    .choice-d { background: var(--choice-d); }
+    .choice-e { background: var(--choice-e); }
+    .choice-f { background: var(--choice-f); }
+    .choice-g { background: var(--choice-g); }
+    .choice-h { background: var(--choice-h); }
 
     .timetable-shell {
       overflow: hidden;
@@ -398,6 +409,15 @@
         grid-template-columns: 1fr;
       }
 
+      .student-heading {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .page-actions {
+        width: 100%;
+      }
+
       .choice-list {
         grid-template-columns: 1fr;
       }
@@ -410,47 +430,6 @@
         min-width: 860px;
       }
     }
-
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 9mm;
-      }
-
-      body {
-        background: white;
-      }
-
-      .app {
-        width: auto;
-        margin: 0;
-      }
-
-      .toolbar {
-        display: none;
-      }
-
-      .pages {
-        gap: 0;
-      }
-
-      .student-page {
-        min-height: calc(100vh - 2mm);
-        margin: 0;
-        padding: 18px 18px 16px;
-        border: 1px solid rgba(159, 145, 133, 0.4);
-        border-radius: 18px;
-        box-shadow: none;
-      }
-
-      .student-page:last-child {
-        break-after: auto;
-      }
-
-      .slot {
-        height: 92px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -459,14 +438,15 @@
       <div class="toolbar-main">
         <div>
           <h1>3학년 2반 학생별 시간표</h1>
-          <p class="toolbar-meta">총 34명 · 생성 시각 2026-03-18 00:54 · 검색 후 보이는 카드를 이미지처럼 한 장씩 인쇄합니다.</p>
+          <p class="toolbar-meta">총 34명 · 생성 시각 2026-03-18 01:12 · 학생별 PDF를 바로 내려받을 수 있습니다.</p>
         </div>
         <span class="status-pill" id="visibleCount">현재 34명 표시 중</span>
       </div>
       <div class="toolbar-actions">
         <input id="searchInput" class="search-input" type="search" placeholder="이름 또는 학번 검색">
         <button id="resetButton" class="btn secondary" type="button">전체 보기</button>
-        <button id="printButton" class="btn" type="button">보이는 카드 인쇄</button>
+        <button id="downloadVisibleButton" class="btn" type="button">보이는 학생 PDF</button>
+        <a class="btn secondary" href="assets/3-2-학생별-시간표-pdf.zip" download>전체 PDF ZIP</a>
       </div>
     </section>
 
@@ -474,10 +454,15 @@
       <section class="student-page is-visible" data-name="강하은" data-student-no="30201">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">강하은</h2>
-          <p class="student-meta">학번 30201</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">강하은</h2>
+            <p class="student-meta">학번 30201</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30201.pdf" download="30201_강하은_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -524,10 +509,15 @@
 <section class="student-page is-visible" data-name="고준혁" data-student-no="30202">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">고준혁</h2>
-          <p class="student-meta">학번 30202</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">고준혁</h2>
+            <p class="student-meta">학번 30202</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30202.pdf" download="30202_고준혁_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -574,10 +564,15 @@
 <section class="student-page is-visible" data-name="권예은" data-student-no="30203">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">권예은</h2>
-          <p class="student-meta">학번 30203</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">권예은</h2>
+            <p class="student-meta">학번 30203</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30203.pdf" download="30203_권예은_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -624,10 +619,15 @@
 <section class="student-page is-visible" data-name="김건우" data-student-no="30204">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">김건우</h2>
-          <p class="student-meta">학번 30204</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">김건우</h2>
+            <p class="student-meta">학번 30204</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30204.pdf" download="30204_김건우_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -674,10 +674,15 @@
 <section class="student-page is-visible" data-name="김도훈" data-student-no="30205">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">김도훈</h2>
-          <p class="student-meta">학번 30205</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">김도훈</h2>
+            <p class="student-meta">학번 30205</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30205.pdf" download="30205_김도훈_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -724,10 +729,15 @@
 <section class="student-page is-visible" data-name="김민제" data-student-no="30206">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">김민제</h2>
-          <p class="student-meta">학번 30206</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">김민제</h2>
+            <p class="student-meta">학번 30206</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30206.pdf" download="30206_김민제_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -774,10 +784,15 @@
 <section class="student-page is-visible" data-name="김민지" data-student-no="30207">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">김민지</h2>
-          <p class="student-meta">학번 30207</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">김민지</h2>
+            <p class="student-meta">학번 30207</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30207.pdf" download="30207_김민지_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -824,10 +839,15 @@
 <section class="student-page is-visible" data-name="김태우" data-student-no="30208">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">김태우</h2>
-          <p class="student-meta">학번 30208</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">김태우</h2>
+            <p class="student-meta">학번 30208</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30208.pdf" download="30208_김태우_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -874,10 +894,15 @@
 <section class="student-page is-visible" data-name="문시현" data-student-no="30209">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">문시현</h2>
-          <p class="student-meta">학번 30209</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">문시현</h2>
+            <p class="student-meta">학번 30209</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30209.pdf" download="30209_문시현_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -924,10 +949,15 @@
 <section class="student-page is-visible" data-name="박세은" data-student-no="30210">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">박세은</h2>
-          <p class="student-meta">학번 30210</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">박세은</h2>
+            <p class="student-meta">학번 30210</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30210.pdf" download="30210_박세은_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -974,10 +1004,15 @@
 <section class="student-page is-visible" data-name="박시연" data-student-no="30211">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">박시연</h2>
-          <p class="student-meta">학번 30211</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">박시연</h2>
+            <p class="student-meta">학번 30211</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30211.pdf" download="30211_박시연_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1024,10 +1059,15 @@
 <section class="student-page is-visible" data-name="박유진" data-student-no="30212">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">박유진</h2>
-          <p class="student-meta">학번 30212</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">박유진</h2>
+            <p class="student-meta">학번 30212</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30212.pdf" download="30212_박유진_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1074,10 +1114,15 @@
 <section class="student-page is-visible" data-name="박준혁" data-student-no="30213">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">박준혁</h2>
-          <p class="student-meta">학번 30213</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">박준혁</h2>
+            <p class="student-meta">학번 30213</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30213.pdf" download="30213_박준혁_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1124,10 +1169,15 @@
 <section class="student-page is-visible" data-name="백선익" data-student-no="30214">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">백선익</h2>
-          <p class="student-meta">학번 30214</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">백선익</h2>
+            <p class="student-meta">학번 30214</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30214.pdf" download="30214_백선익_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1174,10 +1224,15 @@
 <section class="student-page is-visible" data-name="송준수" data-student-no="30215">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">송준수</h2>
-          <p class="student-meta">학번 30215</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">송준수</h2>
+            <p class="student-meta">학번 30215</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30215.pdf" download="30215_송준수_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1224,10 +1279,15 @@
 <section class="student-page is-visible" data-name="양가연" data-student-no="30216">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">양가연</h2>
-          <p class="student-meta">학번 30216</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">양가연</h2>
+            <p class="student-meta">학번 30216</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30216.pdf" download="30216_양가연_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1274,10 +1334,15 @@
 <section class="student-page is-visible" data-name="원혜현" data-student-no="30217">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">원혜현</h2>
-          <p class="student-meta">학번 30217</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">원혜현</h2>
+            <p class="student-meta">학번 30217</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30217.pdf" download="30217_원혜현_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1324,10 +1389,15 @@
 <section class="student-page is-visible" data-name="유선왕" data-student-no="30218">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">유선왕</h2>
-          <p class="student-meta">학번 30218</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">유선왕</h2>
+            <p class="student-meta">학번 30218</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30218.pdf" download="30218_유선왕_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1374,10 +1444,15 @@
 <section class="student-page is-visible" data-name="이은서" data-student-no="30219">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">이은서</h2>
-          <p class="student-meta">학번 30219</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">이은서</h2>
+            <p class="student-meta">학번 30219</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30219.pdf" download="30219_이은서_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1424,10 +1499,15 @@
 <section class="student-page is-visible" data-name="이정아" data-student-no="30220">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">이정아</h2>
-          <p class="student-meta">학번 30220</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">이정아</h2>
+            <p class="student-meta">학번 30220</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30220.pdf" download="30220_이정아_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1474,10 +1554,15 @@
 <section class="student-page is-visible" data-name="이준호" data-student-no="30221">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">이준호</h2>
-          <p class="student-meta">학번 30221</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">이준호</h2>
+            <p class="student-meta">학번 30221</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30221.pdf" download="30221_이준호_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1524,10 +1609,15 @@
 <section class="student-page is-visible" data-name="이진우" data-student-no="30222">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">이진우</h2>
-          <p class="student-meta">학번 30222</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">이진우</h2>
+            <p class="student-meta">학번 30222</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30222.pdf" download="30222_이진우_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1574,10 +1664,15 @@
 <section class="student-page is-visible" data-name="임청아" data-student-no="30223">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">임청아</h2>
-          <p class="student-meta">학번 30223</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">임청아</h2>
+            <p class="student-meta">학번 30223</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30223.pdf" download="30223_임청아_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1624,10 +1719,15 @@
 <section class="student-page is-visible" data-name="전소현" data-student-no="30224">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">전소현</h2>
-          <p class="student-meta">학번 30224</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">전소현</h2>
+            <p class="student-meta">학번 30224</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30224.pdf" download="30224_전소현_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1674,10 +1774,15 @@
 <section class="student-page is-visible" data-name="정윤서" data-student-no="30225">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">정윤서</h2>
-          <p class="student-meta">학번 30225</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">정윤서</h2>
+            <p class="student-meta">학번 30225</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30225.pdf" download="30225_정윤서_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1724,10 +1829,15 @@
 <section class="student-page is-visible" data-name="조승우" data-student-no="30226">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">조승우</h2>
-          <p class="student-meta">학번 30226</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">조승우</h2>
+            <p class="student-meta">학번 30226</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30226.pdf" download="30226_조승우_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1774,10 +1884,15 @@
 <section class="student-page is-visible" data-name="조아영" data-student-no="30227">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">조아영</h2>
-          <p class="student-meta">학번 30227</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">조아영</h2>
+            <p class="student-meta">학번 30227</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30227.pdf" download="30227_조아영_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1824,10 +1939,15 @@
 <section class="student-page is-visible" data-name="최나린" data-student-no="30228">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">최나린</h2>
-          <p class="student-meta">학번 30228</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">최나린</h2>
+            <p class="student-meta">학번 30228</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30228.pdf" download="30228_최나린_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1874,10 +1994,15 @@
 <section class="student-page is-visible" data-name="최유진" data-student-no="30229">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">최유진</h2>
-          <p class="student-meta">학번 30229</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">최유진</h2>
+            <p class="student-meta">학번 30229</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30229.pdf" download="30229_최유진_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1924,10 +2049,15 @@
 <section class="student-page is-visible" data-name="최지민" data-student-no="30230">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">최지민</h2>
-          <p class="student-meta">학번 30230</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">최지민</h2>
+            <p class="student-meta">학번 30230</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30230.pdf" download="30230_최지민_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -1974,10 +2104,15 @@
 <section class="student-page is-visible" data-name="현혜경" data-student-no="30231">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">현혜경</h2>
-          <p class="student-meta">학번 30231</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">현혜경</h2>
+            <p class="student-meta">학번 30231</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30231.pdf" download="30231_현혜경_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -2024,10 +2159,15 @@
 <section class="student-page is-visible" data-name="황동현" data-student-no="30232">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">황동현</h2>
-          <p class="student-meta">학번 30232</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">황동현</h2>
+            <p class="student-meta">학번 30232</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30232.pdf" download="30232_황동현_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -2074,10 +2214,15 @@
 <section class="student-page is-visible" data-name="kim alexandr" data-student-no="30233">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">KIM ALEXANDR</h2>
-          <p class="student-meta">학번 30233</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">KIM ALEXANDR</h2>
+            <p class="student-meta">학번 30233</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30233.pdf" download="30233_KIM ALEXANDR_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -2124,10 +2269,15 @@
 <section class="student-page is-visible" data-name="li xeniya" data-student-no="30234">
       <div class="page-accent"></div>
       <header class="page-header">
-        <div>
-          <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
-          <h2 class="student-name">LI XENIYA</h2>
-          <p class="student-meta">학번 30234</p>
+        <div class="student-heading">
+          <div>
+            <p class="eyebrow">2026학년도 1학기 3학년 2반 개인 시간표</p>
+            <h2 class="student-name">LI XENIYA</h2>
+            <p class="student-meta">학번 30234</p>
+          </div>
+          <div class="page-actions">
+            <a class="btn secondary page-download" data-pdf-link href="assets/pdf/30234.pdf" download="30234_LI XENIYA_시간표.pdf">PDF 다운로드</a>
+          </div>
         </div>
         <aside class="choice-panel">
           <p class="panel-title">선택 과목</p>
@@ -2174,17 +2324,19 @@
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script id="dataset" type="application/json">{"generated_at": "2026-03-18T00:54:44", "student_count": 34}</script>
   <script>
     const searchInput = document.getElementById("searchInput");
     const resetButton = document.getElementById("resetButton");
-    const printButton = document.getElementById("printButton");
+    const downloadVisibleButton = document.getElementById("downloadVisibleButton");
     const visibleCount = document.getElementById("visibleCount");
     const cards = Array.from(document.querySelectorAll(".student-page"));
 
     function normalize(value) {
       return value.toLowerCase().trim();
+    }
+
+    function getVisibleCards() {
+      return cards.filter((card) => !card.classList.contains("is-hidden"));
     }
 
     function applyFilter() {
@@ -2202,134 +2354,21 @@
       visibleCount.textContent = `현재 ${count}명 표시 중`;
     }
 
-    function getVisibleCards() {
-      return cards.filter((card) => !card.classList.contains("is-hidden"));
-    }
-
-    function escapeHtml(value) {
-      return value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
-    }
-
-    function openPrintPreview(popup, images) {
-      const sheets = images.map((image, index) => `
-        <section class="sheet${index < images.length - 1 ? " has-break" : ""}">
-          <img src="${image.url}" alt="${escapeHtml(image.label)}" />
-        </section>
-      `).join("");
-
-      popup.document.open();
-      popup.document.write(`<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <title>시간표 인쇄</title>
-  <style>
-    @page {
-      size: A4 landscape;
-      margin: 0;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: white;
-    }
-
-    body {
-      font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-    }
-
-    .sheet {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      background: white;
-    }
-
-    .sheet.has-break {
-      break-after: page;
-      page-break-after: always;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-  </style>
-</head>
-<body>${sheets}</body>
-</html>`);
-      popup.document.close();
-      popup.onload = () => {
-        popup.focus();
-        setTimeout(() => popup.print(), 250);
-      };
-    }
-
-    async function printVisibleCards() {
+    function downloadVisibleCardPdf() {
       const visibleCards = getVisibleCards();
       if (visibleCards.length === 0) {
-        alert("인쇄할 카드가 없습니다.");
+        alert("다운로드할 학생이 없습니다.");
         return;
       }
 
-      const popup = window.open("", "_blank", "noopener,noreferrer");
-      if (!popup) {
-        alert("인쇄 창이 차단되었습니다. 브라우저의 팝업 차단을 잠시 해제해 주세요.");
+      if (visibleCards.length !== 1) {
+        alert("한 명만 보이도록 검색한 뒤 다시 눌러 주세요. 전체 파일이 필요하면 '전체 PDF ZIP'을 사용하면 됩니다.");
         return;
       }
 
-      popup.document.write("<!doctype html><html lang='ko'><head><meta charset='utf-8'><title>시간표 준비 중</title></head><body style='font-family: Apple SD Gothic Neo, Noto Sans KR, sans-serif; padding: 24px;'>시간표 이미지를 준비 중입니다...</body></html>");
-      popup.document.close();
-
-      const previousText = printButton.textContent;
-      printButton.disabled = true;
-      printButton.textContent = "이미지 준비 중...";
-
-      try {
-        if (typeof window.html2canvas !== "function") {
-          throw new Error("html2canvas unavailable");
-        }
-
-        const scale = Math.max(2, Math.min(3, window.devicePixelRatio || 1));
-        const images = [];
-
-        for (const card of visibleCards) {
-          const name = card.querySelector(".student-name")?.textContent?.trim() || "시간표";
-          const canvas = await window.html2canvas(card, {
-            backgroundColor: "#fffdf8",
-            scale,
-            useCORS: true,
-            logging: false,
-            windowWidth: document.documentElement.clientWidth,
-            windowHeight: document.documentElement.clientHeight,
-            scrollX: 0,
-            scrollY: -window.scrollY,
-          });
-
-          images.push({
-            label: `${name} 시간표`,
-            url: canvas.toDataURL("image/png"),
-          });
-        }
-
-        openPrintPreview(popup, images);
-      } catch (error) {
-        console.error(error);
-        popup.close();
-        alert("카드를 이미지로 준비하지 못했습니다. 새로고침 후 다시 시도해 주세요.");
-      } finally {
-        printButton.disabled = false;
-        printButton.textContent = previousText;
+      const link = visibleCards[0].querySelector("[data-pdf-link]");
+      if (link) {
+        link.click();
       }
     }
 
@@ -2339,10 +2378,7 @@
       applyFilter();
       searchInput.focus();
     });
-
-    printButton.addEventListener("click", () => {
-      printVisibleCards();
-    });
+    downloadVisibleButton.addEventListener("click", downloadVisibleCardPdf);
 
     applyFilter();
   </script>
