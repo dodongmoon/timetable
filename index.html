@@ -130,6 +130,12 @@
       box-shadow: none;
     }
 
+    .btn:disabled {
+      cursor: wait;
+      opacity: 0.7;
+      box-shadow: none;
+    }
+
     .status-pill {
       padding: 10px 14px;
       border-radius: 999px;
@@ -453,7 +459,7 @@
       <div class="toolbar-main">
         <div>
           <h1>3학년 2반 학생별 시간표</h1>
-          <p class="toolbar-meta">총 34명 · 생성 시각 2026-03-17 23:45 · 검색 후 보이는 카드만 인쇄됩니다.</p>
+          <p class="toolbar-meta">총 34명 · 생성 시각 2026-03-18 00:54 · 검색 후 보이는 카드를 이미지처럼 한 장씩 인쇄합니다.</p>
         </div>
         <span class="status-pill" id="visibleCount">현재 34명 표시 중</span>
       </div>
@@ -2168,7 +2174,8 @@
     </section>
   </main>
 
-  <script id="dataset" type="application/json">{"generated_at": "2026-03-17T23:45:43", "student_count": 34}</script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script id="dataset" type="application/json">{"generated_at": "2026-03-18T00:54:44", "student_count": 34}</script>
   <script>
     const searchInput = document.getElementById("searchInput");
     const resetButton = document.getElementById("resetButton");
@@ -2195,6 +2202,137 @@
       visibleCount.textContent = `현재 ${count}명 표시 중`;
     }
 
+    function getVisibleCards() {
+      return cards.filter((card) => !card.classList.contains("is-hidden"));
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function openPrintPreview(popup, images) {
+      const sheets = images.map((image, index) => `
+        <section class="sheet${index < images.length - 1 ? " has-break" : ""}">
+          <img src="${image.url}" alt="${escapeHtml(image.label)}" />
+        </section>
+      `).join("");
+
+      popup.document.open();
+      popup.document.write(`<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>시간표 인쇄</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: white;
+    }
+
+    body {
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    .sheet {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: white;
+    }
+
+    .sheet.has-break {
+      break-after: page;
+      page-break-after: always;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+  </style>
+</head>
+<body>${sheets}</body>
+</html>`);
+      popup.document.close();
+      popup.onload = () => {
+        popup.focus();
+        setTimeout(() => popup.print(), 250);
+      };
+    }
+
+    async function printVisibleCards() {
+      const visibleCards = getVisibleCards();
+      if (visibleCards.length === 0) {
+        alert("인쇄할 카드가 없습니다.");
+        return;
+      }
+
+      const popup = window.open("", "_blank", "noopener,noreferrer");
+      if (!popup) {
+        alert("인쇄 창이 차단되었습니다. 브라우저의 팝업 차단을 잠시 해제해 주세요.");
+        return;
+      }
+
+      popup.document.write("<!doctype html><html lang='ko'><head><meta charset='utf-8'><title>시간표 준비 중</title></head><body style='font-family: Apple SD Gothic Neo, Noto Sans KR, sans-serif; padding: 24px;'>시간표 이미지를 준비 중입니다...</body></html>");
+      popup.document.close();
+
+      const previousText = printButton.textContent;
+      printButton.disabled = true;
+      printButton.textContent = "이미지 준비 중...";
+
+      try {
+        if (typeof window.html2canvas !== "function") {
+          throw new Error("html2canvas unavailable");
+        }
+
+        const scale = Math.max(2, Math.min(3, window.devicePixelRatio || 1));
+        const images = [];
+
+        for (const card of visibleCards) {
+          const name = card.querySelector(".student-name")?.textContent?.trim() || "시간표";
+          const canvas = await window.html2canvas(card, {
+            backgroundColor: "#fffdf8",
+            scale,
+            useCORS: true,
+            logging: false,
+            windowWidth: document.documentElement.clientWidth,
+            windowHeight: document.documentElement.clientHeight,
+            scrollX: 0,
+            scrollY: -window.scrollY,
+          });
+
+          images.push({
+            label: `${name} 시간표`,
+            url: canvas.toDataURL("image/png"),
+          });
+        }
+
+        openPrintPreview(popup, images);
+      } catch (error) {
+        console.error(error);
+        popup.close();
+        alert("카드를 이미지로 준비하지 못했습니다. 새로고침 후 다시 시도해 주세요.");
+      } finally {
+        printButton.disabled = false;
+        printButton.textContent = previousText;
+      }
+    }
+
     searchInput.addEventListener("input", applyFilter);
     resetButton.addEventListener("click", () => {
       searchInput.value = "";
@@ -2203,7 +2341,7 @@
     });
 
     printButton.addEventListener("click", () => {
-      window.print();
+      printVisibleCards();
     });
 
     applyFilter();
