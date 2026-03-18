@@ -263,10 +263,13 @@ def destination_text(choice_label: str, subject: str) -> str:
 def render_slot(token: str, student: Student) -> str:
     if token in CHOICE_LABELS:
         subject = student.choices[token]
+        room = destination_text(token, subject)
+        room_html = f'<div class="subject-room">{html.escape(room)}</div>' if room else ""
         return (
             f'<td class="slot choice choice-{token.lower()}">'
             f'<div class="slot-badge">선택{token}</div>'
             f'<div class="{subject_length_class(subject)}">{format_subject(subject)}</div>'
+            f"{room_html}"
             f"</td>"
         )
 
@@ -307,13 +310,10 @@ def render_rows(student: Student) -> str:
 def render_choice_list(student: Student) -> str:
     items = []
     for label in CHOICE_LABELS:
-        room = destination_text(label, student.choices[label])
-        room_html = f'<span class="choice-room">{html.escape(room)}</span>' if room else ""
         items.append(
             f'<li class="choice-item choice-{label.lower()}">'
             f'<span class="choice-key">선택{label}</span>'
             f'<span class="choice-name">{html.escape(student.choices[label])}</span>'
-            f"{room_html}"
             "</li>"
         )
     return "\n".join(items)
@@ -633,14 +633,6 @@ def build_document(students: list[Student]) -> str:
       word-break: keep-all;
     }
 
-    .choice-room {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
     .choice-a { background: var(--choice-a); }
     .choice-b { background: var(--choice-b); }
     .choice-c { background: var(--choice-c); }
@@ -734,6 +726,14 @@ def build_document(students: list[Student]) -> str:
 
     .subject.tightest {
       font-size: 0.8rem;
+    }
+
+    .subject-room {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+      line-height: 1.2;
     }
 
     .choice.choice-a { background: var(--choice-a); }
@@ -1049,18 +1049,15 @@ def draw_choice_chip(
     box: tuple[int, int, int, int],
     label: str,
     subject: str,
-    destination: str,
     fill: tuple[int, int, int],
 ) -> None:
     paste_rounded_fill(image, box, fill, radius=26, outline=(217, 205, 194), width=2)
     x1, y1, x2, y2 = box
     label_font = get_font(18)
-    subject_box = (x1 + 18, y1 + 24, x2 - 18, y2 - 28 if destination else y2 - 10)
+    subject_box = (x1 + 18, y1 + 24, x2 - 18, y2 - 10)
     value_font, spacing = fit_multiline_text(draw, subject_lines(subject), subject_box, 23, 15)
     draw.text((x1 + 18, y1 + 10), label, font=label_font, fill=(118, 106, 98))
     draw.multiline_text((x1 + 18, y1 + 28), subject_lines(subject), font=value_font, fill=(48, 42, 36), spacing=spacing, align="left")
-    if destination:
-        draw.text((x1 + 18, y2 - 18), destination, font=get_font(14), fill=(118, 106, 98))
 
 
 def draw_slot_cell(
@@ -1074,14 +1071,17 @@ def draw_slot_cell(
         fill = CHOICE_COLORS[token]["image"]
         badge_text = f"선택{token}"
         subject = student.choices[token]
+        destination = destination_text(token, subject)
     elif token:
         fill = COMMON_COLORS.get(token, {"image": (244, 239, 233)})["image"]
         badge_text = "공통"
         subject = token
+        destination = ""
     else:
         fill = (244, 241, 237)
         badge_text = ""
         subject = "-"
+        destination = ""
 
     ImageDraw.Draw(image).rectangle(box, fill=fill, outline=(211, 200, 190), width=1)
     x1, y1, x2, y2 = box
@@ -1089,7 +1089,10 @@ def draw_slot_cell(
 
     if token:
         pill_bottom = draw_label_pill(draw, center_x, y1 + 18, badge_text, 18, (255, 251, 247), (116, 103, 95))
-        draw_centered_text(draw, (x1 + 18, pill_bottom + 10, x2 - 18, y2 - 12), subject_lines(subject), (43, 36, 31), 34, 20)
+        subject_bottom = y2 - 28 if destination else y2 - 12
+        draw_centered_text(draw, (x1 + 18, pill_bottom + 10, x2 - 18, subject_bottom), subject_lines(subject), (43, 36, 31), 34, 20)
+        if destination:
+            draw.text((center_x, y2 - 16), destination, font=get_font(15), fill=(118, 106, 98), anchor="mm")
     else:
         draw.text((center_x, (y1 + y2) // 2), "-", font=get_font(38), fill=(150, 140, 132), anchor="mm")
 
@@ -1116,14 +1119,14 @@ def build_student_pdf_image(student: Student) -> Image.Image:
     draw.text((left_x, top_y + 52), student.name, font=get_font(74), fill=ink)
     draw.text((left_x, top_y + 136), f"학번 {student.student_no}", font=get_font(32), fill=muted)
 
-    panel = (1230, 56, PDF_CANVAS[0] - 56, 456)
+    panel = (1230, 56, PDF_CANVAS[0] - 56, 430)
     paste_rounded_fill(canvas, panel, (255, 250, 244), radius=34, outline=line, width=2)
     draw.text((panel[0] + 26, panel[1] + 22), "선택 과목", font=get_font(32), fill=ink)
 
     chip_gap_x = 18
     chip_gap_y = 8
     chip_width = ((panel[2] - panel[0]) - 52 - chip_gap_x) // 2
-    chip_height = 76
+    chip_height = 70
     chip_x1 = panel[0] + 26
     chip_x2 = chip_x1 + chip_width + chip_gap_x
     chip_start_y = panel[1] + 68
@@ -1141,7 +1144,6 @@ def build_student_pdf_image(student: Student) -> Image.Image:
             (x1, y1, x2, y2),
             f"선택{label}",
             student.choices[label],
-            destination_text(label, student.choices[label]),
             CHOICE_COLORS[label]["image"],
         )
 
