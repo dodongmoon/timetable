@@ -1089,10 +1089,10 @@ def draw_slot_cell(
 
     if token:
         pill_bottom = draw_label_pill(draw, center_x, y1 + 18, badge_text, 18, (255, 251, 247), (116, 103, 95))
-        subject_bottom = y2 - 28 if destination else y2 - 12
-        draw_centered_text(draw, (x1 + 18, pill_bottom + 10, x2 - 18, subject_bottom), subject_lines(subject), (43, 36, 31), 34, 20)
+        subject_bottom = y2 - 40 if destination else y2 - 12
+        draw_centered_text(draw, (x1 + 18, pill_bottom + 10, x2 - 18, subject_bottom), subject_lines(subject), (43, 36, 31), 29, 18)
         if destination:
-            draw.text((center_x, y2 - 16), destination, font=get_font(15), fill=(118, 106, 98), anchor="mm")
+            draw.text((center_x, y2 - 18), destination, font=get_font(21), fill=(123, 72, 39), anchor="mm")
     else:
         draw.text((center_x, (y1 + y2) // 2), "-", font=get_font(38), fill=(150, 140, 132), anchor="mm")
 
