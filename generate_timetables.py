@@ -244,7 +244,7 @@ def subject_length_class(subject: str) -> str:
 
 
 def format_subject(subject: str) -> str:
-    return "<br>".join(html.escape(piece) for piece in subject.split("_"))
+    return html.escape(subject)
 
 
 def pdf_href(student: Student) -> str:
@@ -1018,7 +1018,7 @@ def draw_centered_text(
 
 
 def subject_lines(subject: str) -> str:
-    return "\n".join(subject.split("_"))
+    return subject
 
 
 def draw_label_pill(
